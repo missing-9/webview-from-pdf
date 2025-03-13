@@ -169,9 +169,25 @@
                         </div>
                     </div>
                 </div>
-                <p class="mt-8 md:mt-0 text-center md:text-right text-base text-gray-400">
-                    &copy; 2025 PDF文档展示项目. 保留所有权利.
-                </p>
+                <div class="flex flex-col md:flex-row md:justify-between items-center gap-4">
+                    <div class="flex items-center space-x-4 text-gray-400">
+                        <span class="flex items-center">
+                            <i class="fas fa-eye mr-2"></i>
+                            <span id="busuanzi_container_site_pv" class="hidden">
+                                总访问量 <span id="busuanzi_value_site_pv" class="mx-1"></span> 次
+                            </span>
+                        </span>
+                        <span class="flex items-center">
+                            <i class="fas fa-user mr-2"></i>
+                            <span id="busuanzi_container_site_uv" class="hidden">
+                                访客数 <span id="busuanzi_value_site_uv" class="mx-1"></span> 人
+                            </span>
+                        </span>
+                    </div>
+                    <p class="text-center text-base text-gray-400">
+                        &copy; 2025 PDF文档展示项目. 保留所有权利.
+                    </p>
+                </div>
             </div>
         </div>
     </footer>
@@ -200,6 +216,33 @@
             } else {
                 localStorage.setItem('color-theme', 'light');
             }
+        });
+    </script>
+    <!-- 不蒜子统计 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script>
+        // 监听不蒜子脚本加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 定时检查统计容器是否有数据
+            const checkBusuanzi = setInterval(() => {
+                const pvContainer = document.getElementById('busuanzi_container_site_pv');
+                const uvContainer = document.getElementById('busuanzi_container_site_uv');
+                const pvValue = document.getElementById('busuanzi_value_site_pv');
+                const uvValue = document.getElementById('busuanzi_value_site_uv');
+                
+                if (pvValue && uvValue && pvValue.innerText && uvValue.innerText) {
+                    pvContainer.classList.remove('hidden');
+                    uvContainer.classList.remove('hidden');
+                    clearInterval(checkBusuanzi);
+                }
+            }, 1000);
+            
+            // 10秒后如果还没加载成功，也显示容器
+            setTimeout(() => {
+                clearInterval(checkBusuanzi);
+                document.getElementById('busuanzi_container_site_pv')?.classList.remove('hidden');
+                document.getElementById('busuanzi_container_site_uv')?.classList.remove('hidden');
+            }, 10000);
         });
     </script>
 </body>
