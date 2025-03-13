@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthropic 产品分析报告</title>
+    <!-- TailwindCSS 3.0+ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // 配置Tailwind主题
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-200 {
+                transition: all 200ms ease-in-out;
+            }
+            .animate-fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            @apply bg-gray-100 dark:bg-gray-800;
+        }
+        ::-webkit-scrollbar-thumb {
+            @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            @apply bg-gray-400 dark:bg-gray-500;
+        }
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <!-- 导航栏 -->
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold">Anthropic 产品分析报告</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- 深色模式切换按钮 -->
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-all-200">
+                        <i class="fas fa-sun text-yellow-500 dark:hidden"></i>
+                        <i class="fas fa-moon text-blue-300 hidden dark:inline"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
+        <!-- 报告摘要 -->
+        <section class="mb-12">
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                <h2 class="text-2xl font-bold mb-4 text-primary-700 dark:text-primary-400">报告摘要</h2>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    本报告对Anthropic公司的产品进行了全面分析，包括其AI助手Claude的功能特点、市场定位、用户体验以及与竞品的对比分析。报告还探讨了Anthropic的技术优势、安全措施和未来发展方向。
+                </p>
+            </div>
+        </section>
+
+        <!-- 公司简介 -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">公司简介</h2>
+            <div class="space-y-4">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                    <h3 class="text-xl font-semibold mb-3">Anthropic概况</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Anthropic是一家AI安全和研究公司，成立于2021年，由前OpenAI研究员Dario Amodei和Daniela Amodei创立。公司致力于开发可靠、可解释和可控的AI系统，其旗舰产品是AI助手Claude。
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                    <h3 class="text-xl font-semibold mb-3">使命与愿景</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Anthropic的使命是确保AI技术的安全发展和部署，特别关注AI系统的可靠性、透明度和伦理问题。公司采用"宪法AI"方法，通过一系列原则指导AI行为，确保其输出符合人类价值观。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Claude产品分析 -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">Claude产品分析</h2>
+            
+            <!-- 功能特点 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">核心功能与特点</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-brain text-primary-500 mr-3 text-xl"></i>
+                            <h4 class="text-lg font-medium">自然语言理解</h4>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            Claude展示了卓越的自然语言理解能力，能够准确把握复杂问题的上下文和细微差别，提供连贯且相关的回应。
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-shield-alt text-primary-500 mr-3 text-xl"></i>
+                            <h4 class="text-lg font-medium">安全与伦理</h4>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            Claude被设计为拒绝生成有害、非法或不道德的内容，通过宪法AI方法确保输出符合人类价值观和伦理标准。
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-file-alt text-primary-500 mr-3 text-xl"></i>
+                            <h4 class="text-lg font-medium">文档处理</h4>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            Claude能够处理和分析长文档，提取关键信息，总结内容，并回答基于文档的问题，支持多种文件格式。
+                        </p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                        <div class="flex items-center mb-3">
+                            <i class="fas fa-code text-primary-500 mr-3 text-xl"></i>
+                            <h4 class="text-lg font-medium">编程辅助</h4>
+                        </div>
+                        <p class="text-gray-700 dark:text-gray-300">
+                            Claude可以帮助编写、解释和调试代码，支持多种编程语言，并能提供详细的代码解释和最佳实践建议。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版本对比 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">版本对比</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">特性</th>
+                                <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Claude 2</th>
+                                <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Claude Instant</th>
+                                <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Claude 3 (Opus/Sonnet/Haiku)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <tr>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">上下文窗口</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">100K tokens</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">100K tokens</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">200K tokens</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">推理能力</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">强</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">中</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">极强</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">响应速度</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">中</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">快</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">快-极快</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">多模态能力</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">无</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">无</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">支持</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">价格</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">付费</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">免费/付费</td>
+                                <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">付费(分级定价)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 市场定位与竞争分析 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-4">市场定位与竞争分析</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                    <h4 class="text-lg font-medium mb-3">市场定位</h4>
+                    <p class="text-gray-700 dark:text-gray-300 mb-4">
+                        Anthropic将Claude定位为一个安全、有帮助且诚实的AI助手，特别强调其在处理复杂任务、长文档分析和提供有深度见解方面的能力。Claude的目标用户包括企业用户、研究人员、内容创作者和需要高质量AI辅助的专业人士。
+                    </p>
+                    <h4 class="text-lg font-medium mb-3 mt-6">竞争分析</h4>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">对比项</th>
+                                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Claude</th>
+                                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ChatGPT</th>
+                                    <th class="py-3 px-4 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gemini</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                <tr>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">安全性</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">极高</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">高</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">高</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">长文档处理</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">优秀</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">良好</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">良好</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">生态系统</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">发展中</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">成熟</td>
+                                    <td class="py-3 px-4 text-sm text-gray-700 dark:text-gray-300">成熟</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技术与安全 -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">技术与安全</h2>
+            <div class="space-y-6">
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                    <h3 class="text-xl font-semibold mb-3">宪法AI方法</h3>
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        Anthropic的宪法AI方法是一种创新的训练技术，通过一系列原则和价值观指导AI行为。这种方法使Claude能够自主识别并拒绝生成有害内容，同时保持对用户查询的有用回应。
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                    <h3 class="text-xl font-semibold mb-3">安全措施</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-shield-alt text-primary-500 mr-2"></i>
+                                <h4 class="font-medium">内容过滤</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">自动识别并过滤有害、非法或不道德的内容请求</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-user-shield text-primary-500 mr-2"></i>
+                                <h4 class="font-medium">隐私保护</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">严格的数据处理政策，保护用户隐私和敏感信息</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-balance-scale text-primary-500 mr-2"></i>
+                                <h4 class="font-medium">伦理审查</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">持续的伦理审查和评估，确保AI行为符合社会价值观</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-search text-primary-500 mr-2"></i>
+                                <h4 class="font-medium">透明度</h4>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">公开AI系统的设计原则和安全措施，提高透明度和可信度</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 未来展望 -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">未来展望</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                    Anthropic正在积极推进Claude的技术发展，未来可能的方向包括：
+                </p>
+                <ul class="space-y-3 text-gray-700 dark:text-gray-300">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-primary-500 mt-1 mr-2"></i>
+                        <span>增强多模态能力，支持更复杂的图像理解和生成</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-primary-500 mt-1 mr-2"></i>
+                        <span>扩展API生态系统，支持更多第三方应用集成</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-primary-500 mt-1 mr-2"></i>
+                        <span>提高长文档处理能力，支持更大的上下文窗口</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-primary-500 mt-1 mr-2"></i>
+                        <span>开发更专业的垂直领域模型，如法律、医疗和金融</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 结论 -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-6 text-primary-700 dark:text-primary-400 border-b pb-2 border-gray-200 dark:border-gray-700">结论</h2>
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all-200">
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                    Anthropic的Claude代表了AI助手领域的重要创新，特别是在安全性、可靠性和长文档处理方面。虽然面临来自OpenAI、Google等巨头的激烈竞争，但Claude凭借其独特的宪法AI方法和对安全的高度重视，已经在市场中建立了自己的差异化优势。随着技术的不断进步和生态系统的扩展，Claude有望在AI助手市场中占据更重要的位置。
+                </p>
+            </div>
+        </section>
+
+        <!-- 作者信息区域 -->
+        <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-8 text-center">
+                    <h3 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400">作者信息</h3>
+                    <div class="flex flex-col items-center justify-center">
+                        <div class="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center mb-4">
+                            <i class="fas fa-user text-primary-500 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold">李明</h4>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">AI产品分析师 | 技术作家</p>
+                        <p class="text-gray-500 dark:text-gray-500 mt-2 max-w-md text-sm">专注于AI产品分析与评测，拥有5年AI行业经验，致力于探索人工智能的发展趋势与应用前景。</p>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center space-x-6 mb-8">
+                    <a href="https://twitter.com/liming_ai" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-500 hover:text-primary-500 transition-all-200 hover:scale-110">
+                        <i class="fab fa-twitter text-xl mr-2"></i>
+                        <span>Twitter/X</span>
+                    </a>
+                    <a href="https://github.com/liming-ai" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-500 hover:text-primary-500 transition-all-200 hover:scale-110">
+                        <i class="fab fa-github text-xl mr-2"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <a href="https://linkedin.com/in/liming-ai" target="_blank" rel="noopener noreferrer" class="flex items-center text-gray-500 hover:text-primary-500 transition-all-200 hover:scale-110">
+                        <i class="fab fa-linkedin text-xl mr-2"></i>
+                        <span>LinkedIn</span>
+                    </a>
+                </div>
+                
+                <div class="text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 pt-6 pb-4">
+                    <p>© 2024 李明. 保留所有权利。</p>
+                    <p class="mt-2">本报告仅供学习和研究目的使用，未经许可不得用于商业用途。</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        // 检测系统主题偏好并设置初始主题
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+
+        // 主题切换功能
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // 添加页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                setTimeout(() => {
+                    section.classList.add('opacity-100');
+                    section.classList.remove('opacity-0', 'translate-y-4');
+                }, 100 * index);
+            });
+        });
+
+        // 为卡片元素添加悬停效果
+        const cards = document.querySelectorAll('.bg-white, .bg-gray-50');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.classList.add('shadow-md');
+                this.classList.add('scale-[1.01]');
+            });
+            card.addEventListener('mouseleave', function() {
+                this.classList.remove('shadow-md');
+                this.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // 添加懒加载功能
+        document.addEventListener('DOMContentLoaded', function() {
+            if ('IntersectionObserver' in window) {
+                const lazyElements = document.querySelectorAll('.lazy-load');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('loaded');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                lazyElements.forEach(el => observer.observe(el));
+            }
+        });
+    </script>
+</body>
+</html>
